@@ -14,7 +14,7 @@ def get_src_ip():
     for iface, addrs in psutil.net_if_addrs().items():
         for addr in addrs:
             print(addr.address[:3])
-            if addr.family == socket.AF_INET and addr.address[:3] in networks:
+            if addr.family == socket.AF_INET and str(addr.address[:3]) in networks:
                 addr_split = addr.address.split(".")
                 subn_split = addr.netmask.split(".")
                 if(subn_split[1] == "0"): 
