@@ -13,6 +13,7 @@ def get_src_ip():
     networks = ['10.','172','192']
     for iface, addrs in psutil.net_if_addrs().items():
         for addr in addrs:
+            print(addr)
             if addr.family == socket.AF_INET and addr.address[:3] in networks:
                 addr_split = addr.address.split(".")
                 subn_split = addr.netmask.split(".")
