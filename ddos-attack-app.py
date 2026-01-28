@@ -14,15 +14,14 @@ def get_src_ip():
     for iface, addrs in psutil.net_if_addrs().items():
         for addr in addrs:
             print(addr.address[:3])
-            if addr.family == socket.AF_INET and str(addr.address[:3]) in networks:
+            if (addr.family == socket.AF_INET) and str(addr.address[:3]) in networks:
                 addr_split = addr.address.split(".")
                 subn_split = addr.netmask.split(".")
-                if(subn_split[1] == "0"): 
-                    global_src_IP = f"{addr_split[0]}.x.y.z"
+                global_src_IP = f"{addr_split[0]}.{addr_split[1]}.{addr_split[2]}.x"
                 if(subn_split[2] == "0"): 
                     global_src_IP = f"{addr_split[0]}.{addr_split[1]}.x.y"
-                if(subn_split[3] == "0"): 
-                    global_src_IP = f"{addr_split[0]}.{addr_split[1]}.{addr_split[2]}.x"
+                if(subn_split[1] == "0"): 
+                    global_src_IP = f"{addr_split[0]}.x.y.z"
                 subn_split - None
                 addr_split = None
                 print(f"{iface}: {addr.address}/{addr.netmask}")
