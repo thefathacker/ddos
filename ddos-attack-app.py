@@ -19,15 +19,13 @@ def get_src_ip():
                 subn_split = addr.netmask.split(".")
                 if(subn_split[1] == "0"): 
                     global_src_IP = f"{addr_split[0]}.x.y.z"
-                    return
                 if(subn_split[2] == "0"): 
                     global_src_IP = f"{addr_split[0]}.{addr_split[1]}.x.y"
-                    return
                 if(subn_split[3] == "0"): 
                     global_src_IP = f"{addr_split[0]}.{addr_split[1]}.{addr_split[2]}.x"
-                    return
                 subn_split - None
                 addr_split = None
+                print(f"{iface}: {addr.address}/{addr.netmask}")
 
 def get_rand_ip():
     if(global_src_IP is None): get_src_ip()
